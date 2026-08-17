@@ -35,5 +35,5 @@ def test_minimal_authenticated_mvp_flows_are_present() -> None:
     assert "Enable cloud sync" not in source
     assert "sessionStorage" in (WEB_ROOT / "lib" / "localMode.ts").read_text(encoding="utf-8")
     assert "signInWithPassword" not in source
-    assert "/api/v1/projects" in source
-    assert "/api/v1/local/matches" in source
+    assert "/api/local/matches" in source
+    assert (WEB_ROOT / "app" / "api" / "projects" / "route.ts").exists()

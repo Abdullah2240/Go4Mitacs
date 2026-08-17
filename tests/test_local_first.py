@@ -21,7 +21,8 @@ def test_public_projects_and_local_matching_require_no_auth_or_database(monkeypa
     assert projects_response.json()["total"] > 0
     match_response = client.post("/api/v1/local/matches", json={"evidence_text": "Python data analysis"})
     assert match_response.status_code == 200
-    assert match_response.json()["method"] == "deterministic-local-keyword-baseline"
+    assert match_response.json()["method"] == "deterministic-full-corpus-keyword-retrieval"
+    assert match_response.json()["considered"] == 3359
 
 
 def test_cloud_matching_is_not_an_active_route() -> None:
