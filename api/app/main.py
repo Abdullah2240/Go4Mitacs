@@ -48,4 +48,7 @@ def local_matches(payload: dict, limit: int = Query(15, ge=1, le=50)) -> dict:
     if not isinstance(evidence_text, str):
         from fastapi import HTTPException
         raise HTTPException(status_code=422, detail="evidence_text must be text")
-    return {"items": rank_projects(list(load_local_projects()), evidence_text, limit=limit), "method": "deterministic-local-keyword-baseline"}
+    filters = payload.get("filters") if isinstance(payload.get("filters"), dict) else {}
+    allowed = {key: filters.get(key) for key in ("Province", "Professor.UniversityName", "research_area")}
+    items = rank_projects(list(load_local_projects()), evidence_text, limit=limit, filters=allowed)
+    return {"items": items, "method": "deterministic-full-corpus-keyword-retrieval", "considered": len(load_local_projects()), "filtered": bool(filters), "corpus_version": "globalink-normalized-2026-08-17"}
