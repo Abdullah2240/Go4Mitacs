@@ -1,5 +1,13 @@
 # Mitacs Matcher - Implementation Plan and Handoff
 
+## Active implementation direction (2026-08-18)
+
+Replace the single evidence textarea with a browser-local knowledge base and
+staged profile workflow. Do not activate Supabase, apply migrations, or persist
+candidate data remotely. Deterministic matching reports all 3,359 projects
+considered; optional AI reranking is explicitly consented and bounded to a
+user-selected width. Details live in `14_LOCAL_KNOWLEDGE_BASE_AND_AI_CONSENT.md`.
+
 This is the execution plan for turning the current planning and data workspace into a working private application. The plan assumes the application is for one candidate first, but keeps the data model extensible.
 
 ## Current baseline

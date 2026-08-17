@@ -1,5 +1,12 @@
 # Implementation Status
 
+## Direction status: local knowledge-base matcher
+
+The next active milestone is a browser-local document workspace with local
+profile generation, full-corpus retrieval, optional consented AI reranking,
+and visible clear/fallback/privacy states. Cloud infrastructure remains
+deferred.
+
 Updated 2026-08-18 after conversion to local-only mode.
 
 ## Complete

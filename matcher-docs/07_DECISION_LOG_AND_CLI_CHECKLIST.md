@@ -1,5 +1,13 @@
 # Decisions and CLI Start Checklist
 
+## Decision: browser-owned knowledge base and bounded AI review (2026-08-18)
+
+Candidate documents, extracted text, profiles, results, and shortlist state
+stay in browser storage. Keys stay in sessionStorage and are removed by Forget
+key. No provider request occurs before explicit consent. Full-corpus retrieval
+always evaluates all 3,359 projects; AI reads only a labelled bounded pool.
+Do not add migrations, create users/buckets, enable cloud mode, commit, or push.
+
 ## Decision: local-first BYOK default (2026-08-18)
 
 The default product mode is local-first. Public browsing and deterministic

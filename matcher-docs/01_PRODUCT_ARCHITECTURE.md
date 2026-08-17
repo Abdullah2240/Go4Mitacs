@@ -1,5 +1,13 @@
 # Mitacs Project Matcher and CV Alignment Studio
 
+## Direction update: local knowledge-base matcher (2026-08-18)
+
+The active product is a browser-local knowledge-base workspace. The browser
+owns candidate documents, extracted text, profile drafts, results, and
+shortlist decisions. Deterministic matching screens all 3,359 normalized
+projects; optional AI review is a separately consented, bounded second stage.
+See `14_LOCAL_KNOWLEDGE_BASE_AND_AI_CONSENT.md` for the privacy contract.
+
 ## Purpose
 
 Build a private application-intelligence workspace that turns Sheikh Abdullah Bin Zahid's verified evidence into an explainable shortlist of Mitacs internships, then uses the selected projects to produce a stronger, evidence-grounded CV.

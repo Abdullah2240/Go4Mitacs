@@ -1,5 +1,13 @@
 # Mitacs Matcher - UI Design Specification
 
+## Active flow update
+
+The primary flow is `Add evidence -> Review knowledge base -> Build profile ->
+Review profile -> Run full-corpus match`. Documents expose name, type,
+character count, parse status, duplicate state, and errors. Provider actions
+are separate and always show a consent modal naming provider/model and the exact
+data categories leaving the browser.
+
 ## Status
 
 The previous architecture defined the required UI surfaces, but visual UI work was not complete. This document turns those surfaces into an implementable visual system and interaction contract.

@@ -1,5 +1,13 @@
 # Mitacs Matcher
 
+## Current local knowledge-base workflow
+
+Add or paste documents, review the browser-local knowledge base, build/edit an
+evidence-backed profile, then match against all 3,359 public Mitacs projects.
+Candidate files and extracted text are not uploaded to Supabase or persisted by
+the backend. Provider keys remain in sessionStorage only. AI consent is required
+before any external request. See `matcher-docs/14_LOCAL_KNOWLEDGE_BASE_AND_AI_CONSENT.md`.
+
 Local-only Mitacs project browsing and evidence-based deterministic matching.
 The active product does not require registration, Supabase login, a database
 URL, a service-role key, or an AI provider key.

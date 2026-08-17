@@ -1,5 +1,13 @@
 # AI, Retrieval, and Provider-Routing Architecture
 
+## Active local-first contract (2026-08-18)
+
+Candidate content is browser-local by default. OpenRouter, Gemini, and Hugging
+Face are optional adapters; fresh, unambiguous consent is required before any
+selected profile/project content leaves the browser. Full-corpus retrieval
+screens all 3,359 projects. AI reranking is a separate bounded review over
+30, 60, 120, 240, 480, or a custom capped width and never changes coverage.
+
 ## Decision summary
 
 The matcher will index the full Mitacs corpus, not a preselected subset. The AI system has four distinct jobs:
@@ -203,4 +211,3 @@ Track retrieval recall at 15, reranker agreement with manual judgement, citation
 5. Active comparison workspace and final-ten strategy board.
 6. CV Alignment Studio with chat clarification, source-backed suggestions, and approval diffs.
 7. Opt-in multi-provider routing, professor intelligence, and reference-app diversity signals.
-
