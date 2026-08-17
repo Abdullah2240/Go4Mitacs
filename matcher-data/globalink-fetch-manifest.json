@@ -1,0 +1,9 @@
+{
+  "source": "https://globalink.mitacs.ca/api/sasprojectlistpaging",
+  "retrieved_at": "2026-08-17T09:44:17.460365+00:00",
+  "record_count": 3359,
+  "page_size": 100,
+  "raw_jsonl": "globalink-projects-raw.jsonl",
+  "normalized_jsonl": "globalink-projects-normalized.jsonl",
+  "notes": "Public catalogue records only; no authentication or application submission was used."
+}
