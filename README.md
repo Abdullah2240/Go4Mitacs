@@ -1,138 +1,124 @@
 # Mitacs Matcher
 
-## Current local knowledge-base workflow
+Mitacs Matcher is a local-first knowledge-base matcher for Mitacs Globalink
+projects. It screens the complete public catalogue of 3,359 projects with a
+deterministic, evidence-led ranking, while keeping candidate documents,
+profiles, results, private reference notes, and shortlists in the browser.
 
-Add or paste documents, review the browser-local knowledge base, build/edit an
-evidence-backed profile, then match against all 3,359 public Mitacs projects.
-Candidate files and extracted text are not uploaded to Supabase or persisted by
-the backend. Provider keys remain in sessionStorage only. AI consent is required
-before any external request. See `matcher-docs/14_LOCAL_KNOWLEDGE_BASE_AND_AI_CONSENT.md`.
+## Why it is different
 
-Local-only Mitacs project browsing and evidence-based deterministic matching.
-The active product does not require registration, Supabase login, a database
-URL, a service-role key, or an AI provider key.
+The searchable universe is the full corpus, not a fixed top-240 pool. Optional
+AI reranking is a separate, bounded review of selected candidates and is not
+implemented in the Vercel deployment milestone. The deterministic matcher
+works without an account, provider key, database, or cloud sync.
+
+## Features
+
+- Browser-local document workspace with drag/drop, picker, paste, duplicate
+  hashing, size limits, and parsing for text formats, PDF, DOCX, and XLSX.
+- Deterministic local profile builder with editable skills, tools, domains,
+  methods, evidence snippets, and missing-information warnings.
+- Same-origin Next.js routes for public project search, detail, health, and
+  full-corpus local matching.
+- Local shortlist classifications, comparison view, Markdown export, and clear
+  workspace/key/shortlist actions.
+- Optional private professor-reference documents parsed locally only. Historical
+  context annotations are visibly labelled and never affect ranking, eligibility,
+  nationality inference, or recommendations.
 
 ## Architecture
 
-- `web/`: Next.js and TypeScript frontend.
-- `api/`: FastAPI and Python backend.
-- `matcher-data/`: public normalized Mitacs project corpus used by local mode.
-- `matcher-docs/`: architecture, product, privacy, and implementation notes.
-
-The backend serves the public corpus and runs deterministic keyword matching.
-Candidate evidence and shortlist state remain in the browser. Supabase Auth,
-private candidate tables, cloud shortlists, Storage, and cross-device sync are
-deferred infrastructure preserved for a future product mode.
-
-## Prerequisites
-
-- Python 3.11 or newer
-- Node.js and npm
-
-## Installation
-
-From the repository root in PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r api\requirements.txt
-Copy-Item .env.example .env
-```
-
-Ensure the local setting is present in `.env`:
-
 ```text
-CLOUD_SYNC_ENABLED=false
+web/app/page.tsx                 browser workspace and local storage UI
+web/lib/documentParser.ts        browser-side TXT/MD/CSV/JSON/HTML/PDF/DOCX/XLSX parsing
+web/lib/profile.ts               deterministic candidate profile extraction
+web/data/mitacs-projects.public.json  committed minimized public index
+web/app/api/                       same-origin Vercel Route Handlers
+scripts/generate_public_index.py  reproducible public-index generator
+matcher-data/                     normalized public source corpus
 ```
 
-No Supabase or database variables are needed for local mode.
+The active deployable application is `web/`. The Python API and Supabase
+migrations remain historical/deferred code and are not required or initialized
+by the active product. No candidate document is accepted by a route handler.
 
-Install frontend dependencies:
-
-```powershell
-Set-Location web
-npm install
-```
-
-## Run locally
-
-Start the FastAPI backend from the repository root:
-
-```powershell
-uvicorn app.main:app --app-dir api --reload --host 127.0.0.1 --port 8000
-```
-
-The API is available at `http://127.0.0.1:8000`.
-
-Health endpoints:
-
-- `GET http://127.0.0.1:8000/health/live`
-- `GET http://127.0.0.1:8000/health/ready`
-- `GET http://127.0.0.1:8000/health`
-
-In another terminal, start the Next.js frontend:
-
-```powershell
-Set-Location web
-npm run dev
-```
-
-The frontend is available at `http://localhost:3000`. Set
-`NEXT_PUBLIC_API_URL` in `.env` when the API is deployed somewhere other than
-`http://127.0.0.1:8000`.
-
-## Local privacy behavior
-
-Provider keys are optional. If entered, a key is stored only in browser
-`sessionStorage` for the current session and can be removed with **Forget key**.
-The keys are not sent to the backend, Supabase, URLs, logs, analytics, or
-external providers. External AI calls are not implemented or enabled.
-
-Candidate evidence and local shortlists are stored in browser `localStorage`.
-This is not an encrypted vault; do not use it for highly sensitive material.
-The data is not synced across devices and is lost if the browser storage is
-cleared.
-
-Public project search and deterministic local matching work without an AI key,
-Supabase credentials, or a database password. Candidate evidence is sent only
-to the local API process when matching is run; it is not sent to an external
-AI provider.
-
-## Production deployment
-
-A deployed frontend requires a reachable deployed API configured through
-`NEXT_PUBLIC_API_URL`, or an equivalent deployment that bundles and serves the
-public project corpus through the API. Do not expose database URLs,
-service-role keys, JWT secrets, provider secrets, or other backend credentials
-as `NEXT_PUBLIC_*` variables.
-
-## Verification commands
+## Local development
 
 From the repository root:
 
 ```powershell
+cd web
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. This runs the frontend and public matching API
+together. No `.env` file or environment variable is required.
+
+## Public corpus refresh
+
+When the official normalized corpus is refreshed, regenerate the committed
+deployment index from the repository root:
+
+```powershell
+python scripts\generate_public_index.py
+```
+
+The generator reads `matcher-data/globalink-projects-normalized.jsonl`, selects
+only public search/detail fields, sorts by project ID, and writes
+`web/data/mitacs-projects.public.json`. Do not manually edit the generated file.
+
+## Vercel deployment
+
+Import the GitHub repository in Vercel and set:
+
+- Root Directory: `web`
+- Framework Preset: Next.js
+- Environment variables: none
+
+Do not add Supabase, database, backend URL, analytics, or provider-key
+variables. Then deploy from the Vercel UI. The repository does not deploy
+automatically from this workspace.
+
+“Local-first” means no account or server-side candidate persistence. The hosted
+site and its public corpus routes still need a network connection; it is not an
+offline application. Optional future AI actions must obtain explicit consent
+before selected content leaves the browser.
+
+## Privacy and limitations
+
+Provider keys, when used by a future consented adapter, belong only in
+`sessionStorage`. They must never be committed, placed in URLs, logged, stored
+in localStorage, or configured in Vercel. Browser localStorage is not encrypted
+and has storage limits. Clear the workspace and private reference context on a
+shared machine. The public index contains only public Mitacs project data.
+
+## Verification
+
+```powershell
+cd web
+npm run lint
+npm run test
+npm run build
+cd ..
 pytest -q
 python -m compileall api scripts
 python scripts\check_public_repo.py
-python scripts\import_smoke.py --limit 100
 ```
 
-Build the frontend:
+## Current status and roadmap
 
-```powershell
-Set-Location web
-npm run build
-npx tsc --noEmit
-```
+Current status: frontend-only Vercel deployment, local knowledge base,
+deterministic full-corpus retrieval, local shortlist, private historical
+annotations, and production build verification are implemented.
 
-The repository currently has no dedicated frontend `lint` or JavaScript test
-script; frontend security behavior is covered by the Python test suite and
-the production build/typecheck.
+Roadmap: consented provider adapters and bounded AI reranking, richer local
+document claim review, stronger semantic retrieval, and expanded comparison
+tools. These are optional additions and do not change the full-corpus promise.
 
-## Deferred Supabase infrastructure
+## Deferred infrastructure
 
-Existing Supabase migrations and private-data code are retained as historical
-and deferred infrastructure. Local-only operation does not apply or push
-migrations, create users, create Storage buckets, or require Supabase Auth.
-Do not run `supabase db push` for normal local development.
+Historical Supabase migrations, authentication, private candidate APIs, and
+cloud shortlist code are retained for research history only. Do not apply
+migrations, create users or buckets, enable cloud sync, or add database
+credentials for the active product.

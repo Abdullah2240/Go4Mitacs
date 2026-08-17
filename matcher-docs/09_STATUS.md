@@ -7,6 +7,15 @@ profile generation, full-corpus retrieval, optional consented AI reranking,
 and visible clear/fallback/privacy states. Cloud infrastructure remains
 deferred.
 
+## Deployment status (2026-08-18)
+
+The active application is deployable as one Next.js project with `web` as the
+Vercel Root Directory. The public index is generated from the normalized
+3,359-project corpus and committed under `web/data/`. Active routes are
+same-origin Next.js handlers for `/api/health`, `/api/projects`,
+`/api/projects/:projectId`, and `/api/local/matches`. The retained FastAPI
+application is not required for the active deployment.
+
 Updated 2026-08-18 after conversion to local-only mode.
 
 ## Complete
