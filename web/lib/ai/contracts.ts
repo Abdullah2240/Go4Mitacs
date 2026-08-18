@@ -10,8 +10,10 @@ export type ProviderResponse = { text: string; provider: Provider; model: string
 export type ProfileClaim = { text: string; confidence: number; sourceIds: string[]; status?: "proposed" | "approved" | "rejected" | "unsupported" };
 export type AIProfileProposal = { headline: ProfileClaim | null; technicalSkills: Record<string, ProfileClaim[]>; researchInterests: ProfileClaim[]; experienceBullets: ProfileClaim[]; projectSummaries: ProfileClaim[]; measurableOutcomes: ProfileClaim[]; strengths: ProfileClaim[]; missingInformation: string[]; questions: string[] };
 export type RerankItem = { projectId: string; rank: number; finalFitScore: number; matchedEvidence: string[]; missingEvidence: string[]; whyItFits: string; emphasize: string[]; uncertainty: string[] };
+export type RerankValidationOptions = { candidateIds: string[]; submittedSourceIds?: string[]; requireComplete?: boolean };
 export type CombinedScore = { projectId: string; semanticSimilarity: number; keywordOverlap: number; disciplineFit: number; evidenceCoverage: number; missingRequirements: string[]; finalScore: number; explanation: string; confidence: number };
 export type CVAlignmentDraft = { summary: ProfileClaim | null; reorderedSkills: ProfileClaim[]; projectBullets: ProfileClaim[]; researchInterests: ProfileClaim[]; suggestedKeywords: string[]; gapAnalysis: string[]; questions: string[] };
 export function profileToText(profile: Profile | null) { return profile ? [...profile.skills, ...profile.tools, ...profile.domains, ...profile.methods, ...profile.evidence].join(" ") : ""; }
 export function projectToText(project: PublicProject) { return [project.title, project.description_preview, project.research_area, project.skills_background, project.university, project.province].filter(Boolean).join(" "); }
 export function selectedDocuments(documents: DocumentRecord[], ids: string[]) { return documents.filter((document) => ids.includes(document.id)); }
+export function claimId(section: string, index: number) { return `${section}:${index}`; }

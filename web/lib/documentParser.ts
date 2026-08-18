@@ -12,6 +12,13 @@ export async function parseDocument(file: File, kind: "candidate" | "reference" 
     else if (file.name.toLowerCase().endsWith(".pdf")) {
       // @ts-ignore browser-only optional dependency
       const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+      // PDF.js 4+ no longer supplies a usable browser worker URL by default.
+      // Keep the worker external and version-pinned: bundling pdf.worker.mjs
+      // through Next/Terser turns its ESM output into an invalid script.
+      if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc =
+          "https://unpkg.com/pdfjs-dist@6.2.108/legacy/build/pdf.worker.mjs";
+      }
       const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
       const pages: string[] = []; for (let i = 1; i <= pdf.numPages; i += 1) { const page = await pdf.getPage(i); const content = await page.getTextContent(); pages.push(content.items.map((item: any) => item.str ?? "").join(" ")); }
       text = pages.join("\n\n");
