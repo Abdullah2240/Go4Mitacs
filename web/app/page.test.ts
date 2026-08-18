@@ -20,12 +20,12 @@ describe("workspace redesign contracts", () => {
     expect(evidenceSource).toContain("Optional private context");
   });
 
-  it("hides provider settings by default and labels live AI as unavailable", () => {
+  it("hides provider settings by default and labels bounded AI review", () => {
     expect(source).toContain('const [settingsOpen, setSettingsOpen] = useState(false)');
     expect(source).toContain("settingsOpen &&");
-    expect(matchSource).toContain("AI reranking is coming soon");
+    expect(matchSource).toContain("Bounded AI review");
     expect(settingsSource).toContain("sessionStorage");
-    expect(source).toContain("No provider request has been made.");
+    expect(source).toContain("No provider call was made.");
   });
 
   it("caps comparison at four and provides accessible removal", () => {
