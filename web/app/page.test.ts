@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const source = readFileSync(join(process.cwd(), "app/page.tsx"), "utf8");
+const evidenceSource = readFileSync(join(process.cwd(), "app/components/EvidenceWorkspace.tsx"), "utf8");
 
 describe("workspace redesign contracts", () => {
   it("keeps the four-step navigation and evidence-first labels", () => {
@@ -10,9 +11,10 @@ describe("workspace redesign contracts", () => {
     expect(source).toContain("[\"profile\", \"Profile\"]");
     expect(source).toContain("[\"results\", \"Matches\"]");
     expect(source).toContain("[\"shortlist\", \"Shortlist\"]");
-    expect(source).toContain("Drop evidence here or choose files");
-    expect(source).toContain("Paste text instead");
-    expect(source).toContain("Optional private context");
+    expect(source).toContain("<EvidenceWorkspace");
+    expect(evidenceSource).toContain("Drop evidence here or choose files");
+    expect(evidenceSource).toContain("Paste text");
+    expect(evidenceSource).toContain("Optional private context");
   });
 
   it("hides provider settings by default and labels live AI as unavailable", () => {
