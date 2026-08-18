@@ -12,6 +12,5 @@ def readiness() -> dict[str, Any]:
         "checks": {
             "manifest": "ok" if manifest_ok else "missing",
             "normalized_projects": "ok" if projects_ok else "missing",
-            "database": {"status": "not_used", "detail": "local-only mode"},
         },
     }

@@ -43,7 +43,7 @@ def project(project_id: str) -> dict:
 
 @app.post("/api/v1/local/matches", tags=["matching"])
 def local_matches(payload: dict, limit: int = Query(15, ge=1, le=50)) -> dict:
-    """Run local matching without authentication, a database, or provider calls."""
+    """Run deterministic matching without external provider calls."""
     evidence_text = payload.get("evidence_text", "")
     if not isinstance(evidence_text, str):
         from fastapi import HTTPException
