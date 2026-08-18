@@ -63,7 +63,8 @@ and deploy with no environment variables.
 Your documents, profile, settings, and shortlist stay in this browser.
 Clearing browser storage removes them from this device. Provider keys, when
 entered, remain in `sessionStorage` for the current browser session only.
-External AI reranking is not currently implemented.
+Optional AI review supports OpenRouter, Gemini, and Hugging Face through explicit browser consent. Evidence sources are reviewed before sending, private historical references are excluded unless selected, and deterministic full-corpus results remain available as the fallback. The local semantic baseline uses fixed hashed-token vectors; no vector database is currently required.
+Profile enrichment and project-specific CV alignment are review-first drafts: every accepted statement retains source provenance, and original profile content is not silently overwritten.
 
 ## Verification
 
