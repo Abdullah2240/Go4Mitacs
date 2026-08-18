@@ -1,0 +1,13 @@
+import { FormEvent } from "react";
+import { DocumentRecord, ReferenceAnnotation } from "../../lib/localMode";
+import { Project } from "./types";
+
+type Props = { project: Project | null; annotations: ReferenceAnnotation[]; referenceDocuments: DocumentRecord[]; onClose: () => void; onSaveAnnotation: (project: Project, note: string) => void };
+
+export function ProjectInspector({ project, annotations, referenceDocuments, onClose, onSaveAnnotation }: Props) {
+  if (!project) return null;
+  const annotation = annotations.find((item) => item.project_id === project.project_id);
+  const canAnnotate = referenceDocuments.some((doc) => doc.status === "ready");
+  function save(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const input = event.currentTarget.elements.namedItem("history-note") as HTMLInputElement; onSaveAnnotation(project, input.value); input.value = ""; }
+  return <div className="modal-backdrop" onClick={onClose}><aside className="modal inspector-modal" role="dialog" aria-modal="true" aria-labelledby="project-inspector-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={onClose} aria-label="Close project details">Close</button><p className="eyebrow">Project {project.project_id}</p><h2 id="project-inspector-title">{project.title}</h2><p className="modal-intro">{project.text_preview}</p><div className="detail-grid"><div><span>Supervisor</span><strong>{project.metadata?.["Professor.FirstName"]} {project.metadata?.["Professor.LastName"]}</strong></div><div><span>University</span><strong>{project.metadata?.["Professor.UniversityName"]}</strong></div><div><span>Province</span><strong>{project.metadata?.Province}</strong></div><div><span>Score</span><strong>{project.score ?? 0} / 100</strong></div></div><section className="inspector-section"><h3>Evidence matches</h3><p>{(project.matched_evidence || []).join(", ") || "No exact terms"}</p></section><section className="inspector-section"><h3>Gaps</h3><p>{(project.missing_evidence || []).join(", ") || "Review manually"}</p></section>{annotation && <div className="history-note"><strong>Historical context</strong><p>{annotation.note}</p><span className="fine">This private annotation is not a ranking signal.</span></div>}<form onSubmit={save} className="annotation-form"><label htmlFor="history-note">Add private historical context</label><input id="history-note" name="history-note" placeholder="Source-backed note from private context" disabled={!canAnnotate} /><button className="button secondary" disabled={!canAnnotate}>Save locally</button></form>{project.source_url && <a href={project.source_url} target="_blank" rel="noreferrer" className="button secondary">Open on Globalink</a>}</aside></div>;
+}

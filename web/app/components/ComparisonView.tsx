@@ -1,0 +1,7 @@
+import { Project } from "./types";
+
+type Props = { selected: string[]; projects: Project[]; onRemove: (id: string) => void };
+
+export function ComparisonView({ selected, projects, onRemove }: Props) {
+  return <section className="compare-panel"><div className="block-heading"><div><h2>Compare selected projects</h2><p className="fine">Select up to four from Matches. The comparison stays in this browser.</p></div><span className="count-badge">{selected.length} of 4 selected</span></div>{selected.length ? <div className="compare-columns">{selected.map((id) => { const project = projects.find((item) => item.project_id === id); return <div className="compare-card" key={id}><button className="remove-compare" onClick={() => onRemove(id)} aria-label={"Remove " + (project?.title || id) + " from comparison"}>x</button><h3>{project?.title || "Project " + id}</h3><dl><div><dt>University</dt><dd>{project?.metadata?.["Professor.UniversityName"] || "Not listed"}</dd></div><div><dt>Supervisor</dt><dd>{project?.metadata?.["Professor.FirstName"]} {project?.metadata?.["Professor.LastName"]}</dd></div><div><dt>Province</dt><dd>{project?.metadata?.Province || "Not listed"}</dd></div><div><dt>Evidence</dt><dd>{(project?.matched_evidence || []).join(", ") || "No exact terms"}</dd></div><div><dt>Gaps</dt><dd>{(project?.missing_evidence || []).join(", ") || "Review manually"}</dd></div></dl></div>; })}</div> : <p className="empty compare-empty">No projects selected yet. Use Compare on a result row.</p>}</section>;
+}
