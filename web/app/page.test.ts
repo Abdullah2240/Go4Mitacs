@@ -17,7 +17,7 @@ describe("workspace redesign contracts", () => {
     expect(source).toContain("<EvidenceWorkspace");
     expect(evidenceSource).toContain("Drop evidence here or choose files");
     expect(evidenceSource).toContain("Paste text");
-    expect(evidenceSource).toContain("Optional private context");
+    expect(evidenceSource).toContain("Protected documents");
   });
 
   it("hides provider settings by default and labels bounded AI review", () => {

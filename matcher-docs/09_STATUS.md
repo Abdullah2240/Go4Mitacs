@@ -2,7 +2,7 @@
 
 Implemented: bundled public corpus, browser-local document parsing, deterministic
 profile generation, full-corpus matching, project filters and detail views,
-private historical context, local shortlist, comparison, Markdown export,
+protected document context, local shortlist, comparison, Markdown export,
 session-only provider-key settings, opt-in provider review with source consent,
 runtime response validation, local semantic baseline, responsive Editorial Research Desk UI, and
 Vercel production build.
