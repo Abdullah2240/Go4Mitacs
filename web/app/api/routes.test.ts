@@ -32,6 +32,8 @@ describe("same-origin public routes", () => {
     expect(body.method).toContain("full-corpus");
     expect(body.items.every((item: { score: number }) => item.score >= 0 && item.score <= 100)).toBe(true);
     expect(body.items.some((item: { score: number }) => item.score === 100)).toBe(false);
+    expect(body.method).toBe("deterministic-full-corpus-bm25-retrieval");
+    expect(body.items.flatMap((item: { matched_evidence: string[] }) => item.matched_evidence)).not.toContain("and");
     expect(body.items.every((item: { source_url: string }) => item.source_url === "https://globalink.mitacs.ca/")).toBe(true);
   });
 });
