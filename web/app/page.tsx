@@ -67,6 +67,10 @@ export default function Home() {
   const [keyPool, setKeyPool] = useState<PooledKey[]>([]);
   const [attemptLog, setAttemptLog] = useState<PoolAttemptLog[]>([]);
   const [resultsStale, setResultsStale] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => { const stored = localStorage.getItem("mitacs:theme"); const initial = stored === "dark" || stored === "light" ? stored : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; setTheme(initial); document.documentElement.setAttribute("data-theme", initial); }, []);
+  function toggleTheme() { setTheme((current) => { const next = current === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", next); localStorage.setItem("mitacs:theme", next); return next; }); }
 
   useEffect(() => { setDocuments(loadDocuments()); setProfile(loadProfile()); setShortlist(loadLocalShortlist()); setAnnotations(loadReferenceAnnotations()); setKeyReady(hasProviderKey(provider)); setKeyPool(getKeyPool(provider)); }, [provider]);
   useEffect(() => { if (!profile) return; const version = hashText(profileToText(profile)); setProfileVersion(version); const resultsVersion = getResultsVersion(); setResultsStale(Boolean(resultsVersion) && resultsVersion !== version && projects.length > 0); }, [profile, projects.length]);
@@ -97,7 +101,7 @@ export default function Home() {
   const updateProfile = (field: keyof Profile, value: string) => { if (!profile) return; const next = { ...profile, [field]: value.split(",").map((x) => x.trim()).filter(Boolean) }; setProfile(next); saveProfile(next); };
 
   return <main className="shell">
-    <AppHeader onSettings={() => setSettingsOpen(true)} onClear={clearAll} />
+    <AppHeader onSettings={() => setSettingsOpen(true)} onClear={clearAll} theme={theme} onToggleTheme={toggleTheme} />
     <div className="workspace-shell">
       <WorkspaceTabs active={tab as StepId} steps={steps} onChange={(step) => setTab(step)} />
       <div className="statusbar" role="status"><span className={busy ? "pulse" : "status-mark"} />{status}</div>
