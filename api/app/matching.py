@@ -1,7 +1,10 @@
 """Deterministic, evidence-first full-corpus retrieval; no LLM or embeddings."""
 
+import math
 import re
 from typing import Any
+
+from .embeddings import EmbeddingProvider
 
 
 TOKEN = re.compile(r"[a-z0-9][a-z0-9+#./-]{1,}", re.I)
@@ -47,3 +50,53 @@ def rank_projects(projects: list[dict[str, Any]], evidence_text: str, *, limit: 
 
 def json_metadata(metadata: dict[str, Any]) -> str:
     return " ".join(str(value) for value in metadata.values() if isinstance(value, (str, int, float)))
+
+
+def _cosine_similarity(left: list[float], right: list[float]) -> float:
+    dot = sum(a * b for a, b in zip(left, right))
+    norm_left = math.sqrt(sum(a * a for a in left)) or 1.0
+    norm_right = math.sqrt(sum(b * b for b in right)) or 1.0
+    return dot / (norm_left * norm_right)
+
+
+def rank_projects_semantic(
+    projects: list[dict[str, Any]],
+    evidence_text: str,
+    provider: EmbeddingProvider,
+    *,
+    limit: int = 15,
+    filters: dict[str, str | None] | None = None,
+    keyword_weight: float = 0.5,
+) -> list[dict[str, Any]]:
+    """Blend real embedding similarity with the deterministic keyword baseline.
+
+    Keyword overlap alone misses conceptually-matching projects that use different
+    vocabulary (e.g. "PyTorch" vs "deep learning frameworks"); embeddings alone can
+    over-reward vague topical similarity with no real evidence. Blending keeps both
+    signals honest.
+    """
+    keyword_ranked = {item["project_id"]: item for item in rank_projects(projects, evidence_text, limit=len(projects) or 1, filters=filters)}
+    if not keyword_ranked:
+        return []
+
+    surviving = [project for project in projects if (project.get("project_id") or project.get("id")) in keyword_ranked]
+    project_texts = [
+        " ".join([project.get("title", ""), project.get("text", ""), json_metadata(project.get("metadata") or {})])
+        for project in surviving
+    ]
+    evidence_vector, *project_vectors = provider.embed([evidence_text, *project_texts])
+
+    semantic_weight = 1.0 - keyword_weight
+    ranked = []
+    for project, project_vector in zip(surviving, project_vectors):
+        project_id = project.get("project_id") or project.get("id")
+        baseline = keyword_ranked[project_id]
+        semantic_score = round(max(0.0, _cosine_similarity(evidence_vector, project_vector)) * 100, 4)
+        blended = round(baseline["score"] * keyword_weight + semantic_score * semantic_weight, 4)
+        ranked.append({
+            **baseline,
+            "score": blended,
+            "score_breakdown": {**baseline["score_breakdown"], "semantic_similarity": semantic_score},
+            "group": "ambitious" if blended >= 70 else "strong-fit" if blended >= 35 else "reliable",
+        })
+    return sorted(ranked, key=lambda item: (-item["score"], str(item["project_id"])))[:limit]
