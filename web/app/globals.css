@@ -1,48 +1,48 @@
 /* ============================================================
    Go4Mitacs — Design tokens
-   Editorial research-desk identity: warm neutrals, rust accent.
+   Calm research-desk identity: sky blue accent, warm beige paper.
    ============================================================ */
 
 :root {
   color-scheme: light;
 
   /* Ink / surfaces */
-  --ink: #201a14;
-  --ink-soft: #4a4038;
-  --muted: #746a5f;
-  --faint: #a89c8d;
-  --paper: #f6f2ea;
+  --ink: #14283e;
+  --ink-soft: #384a5e;
+  --muted: #657587;
+  --faint: #a3b0bd;
+  --paper: #f7f4ec;
   --panel: #fffdf9;
   --panel-raised: #ffffff;
-  --line: #e4dccc;
-  --line-strong: #d2c6ae;
+  --line: #dfe0d9;
+  --line-strong: #c8d3dd;
 
-  /* Accent — burnt rust, not blue/purple */
-  --accent: #b5502e;
-  --accent-deep: #8f3c21;
-  --accent-soft: #fbe9df;
-  --accent-ink: #6f2c16;
+  /* Accent — calm sky blue */
+  --accent: #155fa0;
+  --accent-deep: #0d4779;
+  --accent-soft: #eaf3fa;
+  --accent-ink: #0d3a63;
   /* Stronger, more saturated variant reserved for primary CTAs so they
      read as confidently actionable rather than blending into --accent's
      use as links/borders/eyebrows. */
-  --accent-strong: #b6441e;
-  --accent-strong-deep: #8f3115;
+  --accent-strong: #1465ac;
+  --accent-strong-deep: #0a4372;
 
   /* Status */
-  --success: #3f6b45;
-  --success-soft: #e9f1e6;
-  --warning: #92640f;
-  --warning-soft: #fbf0da;
+  --success: #20735a;
+  --success-soft: #e3f1eb;
+  --warning: #946016;
+  --warning-soft: #fff8ec;
   --danger: #a3372a;
   --danger-soft: #fae6e1;
 
   /* System */
   --radius: 3px;
   --radius-lg: 6px;
-  --shadow-sm: 0 1px 2px rgba(32, 26, 20, 0.06);
-  --shadow-md: 0 8px 24px rgba(32, 26, 20, 0.10);
-  --shadow-lg: 0 24px 64px rgba(32, 26, 20, 0.20);
-  --focus-ring: 0 0 0 3px rgba(181, 80, 46, 0.32);
+  --shadow-sm: 0 1px 2px rgba(20, 40, 62, 0.06);
+  --shadow-md: 0 8px 24px rgba(20, 40, 62, 0.10);
+  --shadow-lg: 0 24px 64px rgba(20, 40, 62, 0.20);
+  --focus-ring: 0 0 0 3px rgba(21, 95, 160, 0.32);
 
   /* Type scale */
   --text-xs: 0.72rem;
@@ -68,25 +68,25 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --ink: #f1e9dc;
-  --ink-soft: #cabfae;
-  --muted: #9c9082;
-  --faint: #6c6255;
-  --paper: #171310;
-  --panel: #1e1a15;
-  --panel-raised: #241f19;
-  --line: #322b22;
-  --line-strong: #453b2f;
+  --ink: #e7edf3;
+  --ink-soft: #c0ccd8;
+  --muted: #8fa0b0;
+  --faint: #56636e;
+  --paper: #101820;
+  --panel: #16202a;
+  --panel-raised: #1c2732;
+  --line: #26333d;
+  --line-strong: #384652;
 
-  --accent: #e07a4f;
-  --accent-deep: #f2a780;
-  --accent-soft: #362219;
-  --accent-ink: #f6c9ab;
-  --accent-strong: #ec8052;
-  --accent-strong-deep: #f5a06e;
+  --accent: #4a9cd6;
+  --accent-deep: #7dbbe8;
+  --accent-soft: #1b2f3d;
+  --accent-ink: #a9d4f2;
+  --accent-strong: #5aa8e0;
+  --accent-strong-deep: #7dbbe8;
 
-  --success: #7fb583;
-  --success-soft: #202a1f;
+  --success: #6fbf9a;
+  --success-soft: #1a2d24;
   --warning: #d9a643;
   --warning-soft: #332512;
   --danger: #e0796a;
@@ -95,29 +95,29 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
-  --focus-ring: 0 0 0 3px rgba(236, 128, 82, 0.45);
+  --focus-ring: 0 0 0 3px rgba(90, 168, 224, 0.45);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --ink: #f1e9dc;
-    --ink-soft: #cabfae;
-    --muted: #9c9082;
-    --faint: #6c6255;
-    --paper: #171310;
-    --panel: #1e1a15;
-    --panel-raised: #241f19;
-    --line: #322b22;
-    --line-strong: #453b2f;
-    --accent: #e07a4f;
-    --accent-deep: #f2a780;
-    --accent-soft: #362219;
-    --accent-ink: #f6c9ab;
-    --accent-strong: #ec8052;
-    --accent-strong-deep: #f5a06e;
-    --success: #7fb583;
-    --success-soft: #202a1f;
+    --ink: #e7edf3;
+    --ink-soft: #c0ccd8;
+    --muted: #8fa0b0;
+    --faint: #56636e;
+    --paper: #101820;
+    --panel: #16202a;
+    --panel-raised: #1c2732;
+    --line: #26333d;
+    --line-strong: #384652;
+    --accent: #4a9cd6;
+    --accent-deep: #7dbbe8;
+    --accent-soft: #1b2f3d;
+    --accent-ink: #a9d4f2;
+    --accent-strong: #5aa8e0;
+    --accent-strong-deep: #7dbbe8;
+    --success: #6fbf9a;
+    --success-soft: #1a2d24;
     --warning: #d9a643;
     --warning-soft: #332512;
     --danger: #e0796a;
@@ -125,7 +125,7 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
     --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
-    --focus-ring: 0 0 0 3px rgba(236, 128, 82, 0.45);
+    --focus-ring: 0 0 0 3px rgba(90, 168, 224, 0.45);
   }
 }
 
@@ -530,13 +530,15 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
   align-items: center;
   gap: var(--space-2);
   padding: 60px 20px;
+  margin-top: var(--space-6);
   color: var(--muted);
   text-align: center;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
 }
 .empty.large {
   padding: 72px 20px;
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-lg);
 }
 .empty-source strong, .empty-state strong, .empty strong { color: var(--ink); font-size: var(--text-md); }
 .empty .button { margin-top: var(--space-2); }
@@ -556,9 +558,18 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
    Aside: private/protected panels — bug fix lives here
    ============================================================ */
 
+.editorial-aside {
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+
 .aside-lead {
-  padding: var(--space-4) 0;
-  border-top: 2px solid var(--accent);
+  padding: 0 0 var(--space-4);
+  margin-top: calc(-1 * var(--space-1));
+  border-top: 0;
+  border-bottom: 2px solid var(--accent);
 }
 .aside-lead h2 {
   margin: 0 0 var(--space-2);
@@ -660,7 +671,8 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
   text-transform: capitalize;
 }
 .profile-field input, .field input, .filter-row input, .short-row select,
-.annotation-form input, .settings-form input, .settings-form select {
+.annotation-form input, .settings-form input, .settings-form select,
+.settings-row input, .settings-row select {
   width: 100%;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
@@ -670,9 +682,11 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .profile-field input:focus, .field input:focus, .filter-row input:focus,
-.settings-form input:focus, .settings-form select:focus {
+.settings-form input:focus, .settings-form select:focus,
+.settings-row input:focus, .settings-row select:focus {
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
+  outline: none;
 }
 .profile-field small, .field small { display: block; margin-top: var(--space-2); color: var(--muted); font-size: var(--text-xs); }
 
@@ -970,9 +984,26 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
 .annotation-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); margin: var(--space-5) 0; }
 .annotation-form label { grid-column: 1 / -1; display: block; margin-bottom: var(--space-2); color: var(--muted); font-size: var(--text-xs); font-weight: 700; }
 
-.settings-form { display: grid; gap: var(--space-4); margin-top: var(--space-5); }
-.settings-form label { margin: 0; display: block; color: var(--muted); font-size: var(--text-xs); font-weight: 700; }
-.settings-form input, .settings-form select { display: block; margin-top: var(--space-2); }
+.settings-form { display: grid; gap: var(--space-4); margin-top: var(--space-4); }
+.settings-form label,
+.settings-row label {
+  margin: 0;
+  display: block;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.settings-form input, .settings-form select,
+.settings-row input, .settings-row select {
+  display: block;
+  margin-top: var(--space-2);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.settings-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-5); }
+.settings-tier-note { margin-top: var(--space-2); }
 .settings-actions { gap: var(--space-3); flex-wrap: wrap; }
 
 .footer-note {
