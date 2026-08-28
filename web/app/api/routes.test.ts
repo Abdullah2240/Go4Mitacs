@@ -36,4 +36,20 @@ describe("same-origin public routes", () => {
     expect(body.items.flatMap((item: { matched_evidence: string[] }) => item.matched_evidence)).not.toContain("and");
     expect(body.items.every((item: { source_url: string }) => item.source_url === "https://globalink.mitacs.ca/")).toBe(true);
   });
+
+  it("does not penalize a long CV padded with real, in-corpus vocabulary relative to a short snippet for the same project match", async () => {
+    const shortEvidence = "Python data analysis";
+    const cvNoise = "communication teamwork leadership project management stakeholder engagement research writing presentation collaboration mentoring";
+    const longEvidence = shortEvidence + " " + cvNoise;
+    const shortResponse = await matches(new Request("http://localhost/api/local/matches?limit=50", { method: "POST", headers: { "content-type": "application/json", "content-length": "9999" }, body: JSON.stringify({ evidence_text: shortEvidence }) }) as any);
+    const longResponse = await matches(new Request("http://localhost/api/local/matches?limit=50", { method: "POST", headers: { "content-type": "application/json", "content-length": "9999" }, body: JSON.stringify({ evidence_text: longEvidence }) }) as any);
+    const shortBody = await shortResponse.json();
+    const longBody = await longResponse.json();
+    const findCoverage = (body: any, projectId: string) => body.items.find((item: { project_id: string }) => item.project_id === projectId)?.score_breakdown?.evidence_coverage ?? 0;
+    const sharedIds = shortBody.items.map((item: { project_id: string }) => item.project_id).filter((id: string) => longBody.items.some((item: { project_id: string }) => item.project_id === id));
+    expect(sharedIds.length).toBeGreaterThan(0);
+    for (const id of sharedIds) {
+      expect(findCoverage(longBody, id)).toBeGreaterThanOrEqual(findCoverage(shortBody, id) - 0.01);
+    }
+  });
 });

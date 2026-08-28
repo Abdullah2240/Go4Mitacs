@@ -49,18 +49,18 @@ export function filterProjects(projects: PublicProject[], params: URLSearchParam
 const corpusIndexById = new Map(corpusIndex.map((indexed) => [indexed.project.id, indexed]));
 
 export function rankProjects(projects: PublicProject[], evidenceText: string, filters: { province?: string; university?: string; research_area?: string }) {
-  const query = Array.from(new Set(terms(evidenceText))); const queryWeight = query.reduce((sum, term) => sum + idf(term), 0) || 1; const queryPhrases = query.length > 1 ? query : [];
+  const query = Array.from(new Set(terms(evidenceText))); const queryPhrases = query.length > 1 ? query : [];
   return projects.filter((project) => (!filters.province || (project.province || "").toLowerCase() === filters.province.toLowerCase()) && (!filters.university || (project.university || "").toLowerCase() === filters.university.toLowerCase()) && (!filters.research_area || searchable(project).toLowerCase().includes(filters.research_area.toLowerCase()))).map((project) => {
     const indexed = corpusIndexById.get(project.id) ?? (() => { const { fields, all } = indexFields(project); return { project, fields, all, allWeight: weightOf(all), titleWeight: weightOf(new Set(fields.title)) }; })(); const matched = query.filter((term) => indexed.all.has(term)); const matchedWeight = matched.reduce((sum, term) => sum + idf(term), 0);
     // How much of what THIS project is asking for shows up in the evidence, not how much of the
     // evidence's full vocabulary (soft skills, dates, filler from a long CV) appears in one project
-    // description. The old denominator (full evidence weight) meant longer, more complete evidence
-    // could only ever lower this signal, since no single project mentions most of a real CV. Same
-    // rationale applies to titleCoverage below, normalized against the title's own (usually much
-    // smaller) vocabulary weight instead of the full query weight.
-    const evidenceCoverage = Math.min(1, matchedWeight / Math.min(queryWeight, indexed.allWeight));
+    // description. Normalized purely against the project's own vocabulary weight (never the query's),
+    // so adding unrelated-but-real terms to a longer CV can't dilute this signal for an unrelated
+    // project match. Same rationale applies to titleCoverage below, normalized against the title's
+    // own (usually much smaller) vocabulary weight.
+    const evidenceCoverage = Math.min(1, matchedWeight / indexed.allWeight);
     const titleMatched = query.filter((term) => indexed.fields.title.includes(term));
-    const titleCoverage = Math.min(1, titleMatched.reduce((sum, term) => sum + idf(term), 0) / Math.min(queryWeight, indexed.titleWeight));
+    const titleCoverage = Math.min(1, titleMatched.reduce((sum, term) => sum + idf(term), 0) / indexed.titleWeight);
     let bm25 = 0;
     for (const term of query) { const termIdf = idf(term); for (const field of Object.keys(fieldWeights) as FieldName[]) { const tf = count(indexed.fields[field], term); if (!tf) continue; const length = indexed.fields[field].length; const normalization = 0.75 + 0.25 * (length / Math.max(1, averageLength[field])); bm25 += fieldWeights[field] * termIdf * ((tf * 2.2) / (tf + 1.2 * normalization)); } }
     const bm25Signal = bm25 / (bm25 + 12); const phraseSignal = queryPhrases.length > 1 ? Math.min(1, (Object.keys(fieldWeights) as FieldName[]).reduce((sum, field) => sum + phraseHits(queryPhrases, indexed.fields[field]), 0) / Math.max(1, queryPhrases.length - 1)) : 0; const score = Number(((bm25Signal * 0.55 + evidenceCoverage * 0.25 + phraseSignal * 0.1 + titleCoverage * 0.1) * 100).toFixed(1)); const missingEvidence = query.filter((term) => !indexed.all.has(term)).slice(0, 8);
