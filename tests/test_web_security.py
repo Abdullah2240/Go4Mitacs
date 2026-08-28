@@ -18,7 +18,8 @@ def test_browser_bundle_uses_public_supabase_configuration_only() -> None:
 def test_browser_uses_same_origin_routes_without_deployment_api_env() -> None:
     source = "\n".join(path.read_text(encoding="utf-8") for path in (list((WEB_ROOT / "app").rglob("*.ts*")) + list((WEB_ROOT / "lib").rglob("*.ts*"))))
     assert "NEXT_PUBLIC_API_URL" not in source
-    assert 'fetch("/api/local/matches' in source
+    page_source = (WEB_ROOT / "app" / "page.tsx").read_text(encoding="utf-8")
+    assert "fetch(" not in page_source
 
 
 def test_public_index_contains_no_raw_ingestion_fields() -> None:
@@ -35,5 +36,5 @@ def test_minimal_authenticated_mvp_flows_are_present() -> None:
     assert "Enable cloud sync" not in source
     assert "sessionStorage" in (WEB_ROOT / "lib" / "localMode.ts").read_text(encoding="utf-8")
     assert "signInWithPassword" not in source
-    assert "/api/local/matches" in source
+    assert "rankProjects" in source
     assert (WEB_ROOT / "app" / "api" / "projects" / "route.ts").exists()
