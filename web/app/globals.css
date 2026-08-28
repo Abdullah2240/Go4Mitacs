@@ -291,6 +291,11 @@ select:focus-visible, summary:focus-visible, a:focus-visible {
   font-weight: 600;
   font-size: 1.1rem;
 }
+/* Dark theme's accent is too light for white text at this size — same fix as .button.primary above. */
+[data-theme="dark"] .brand-mark { color: var(--ink); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand-mark { color: var(--ink); }
+}
 
 .wordmark {
   font-family: var(--font-display), Georgia, serif;
