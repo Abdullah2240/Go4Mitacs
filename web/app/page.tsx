@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { buildLocalProfile } from "../lib/profile";
 import { parseDocument, pasteDocument } from "../lib/documentParser";
 import { publicCorpus, rankProjects } from "../lib/publicCorpus";
+import { useFocusTrap } from "../lib/useFocusTrap";
 import { addPoolKey, clearKnowledgeBase, clearShortlist, DocumentRecord, getKeyPool, getProfileVersion, getResultsVersion, hasProviderKey, hashText, loadDocuments, loadLocalShortlist, loadProfile, loadReferenceAnnotations, LocalShortlistItem, PooledKey, Profile, ReferenceAnnotation, removePoolKey, saveDocuments, saveLocalShortlist, saveProfile, saveReferenceAnnotations, setProfileVersion, setResultsVersion, Provider } from "../lib/localMode";
 import { AppHeader } from "./components/AppHeader";
 import { EvidenceWorkspace } from "./components/EvidenceWorkspace";
@@ -121,7 +122,12 @@ export default function Home() {
       {cvDraft && cvProject && <CVAlignmentReview project={cvProject} draft={cvDraft} documents={documents} accepted={cvAccepted} rejected={cvRejected} onAccept={(key) => { setCvAccepted((current) => current.includes(key) ? current : [...current, key]); setCvRejected((current) => current.filter((item) => item !== key)); }} onReject={(key) => { setCvRejected((current) => current.includes(key) ? current : [...current, key]); setCvAccepted((current) => current.filter((item) => item !== key)); }} onApprove={() => { const approved = createApprovedCVAlignment(cvProject, cvDraft, cvAccepted); setApprovedCV(approved); localStorage.setItem(`mitacs:cv-alignment:${cvProject.project_id}`, JSON.stringify(approved)); setCvDraft(null); setStatus("Approved CV alignment saved separately from the original profile."); }} onClose={() => { setCvDraft(null); setCvAccepted([]); setCvRejected([]); }} />}
       {aiReceipt && <div className="ai-receipt" role="status"><strong>AI request receipt</strong><span>{aiReceipt}</span></div>}
     {settingsOpen && <SettingsDialog provider={provider} model={model} keyReady={keyReady} keyPool={keyPool} onProvider={(value) => { setProvider(value); setModel(providerDefaults[value]); }} onModel={setModel} onAddKey={addKey} onRemoveKey={removeKey} onClose={() => setSettingsOpen(false)} onConsent={() => { setSettingsOpen(false); setConsent(true); }} onSmokeTest={() => { setSettingsOpen(false); openAIReview("profile"); }} />}
-    {consent && <div className="modal-backdrop"><div className="modal consent"><button className="modal-close" onClick={() => setConsent(false)}>Close</button><p className="eyebrow">Consent policy</p><h2>Before any provider request</h2><p>This app would name the selected provider and model, list the exact categories of content being sent, explain that the key and content are used only for that action, and let you cancel.</p><p>AI reranking runs only when you add a session key and confirm the request review. No provider request has been made without your confirmation.</p><button className="button primary" onClick={() => setConsent(false)}>Done</button></div></div>}
+    {consent && <ConsentModal onClose={() => setConsent(false)} />}
     <footer className="footer-note">Go4Mitacs is an independent project-matching tool and is not affiliated with or endorsed by Mitacs.</footer>
   </main>;
+}
+
+function ConsentModal({ onClose }: { onClose: () => void }) {
+  const trapRef = useFocusTrap<HTMLDivElement>();
+  return <div className="modal-backdrop"><div className="modal consent" role="dialog" aria-modal="true" aria-labelledby="consent-title" tabIndex={-1} ref={trapRef}><button className="modal-close" onClick={onClose}>Close</button><p className="eyebrow">Consent policy</p><h2 id="consent-title">Before any provider request</h2><p>This app would name the selected provider and model, list the exact categories of content being sent, explain that the key and content are used only for that action, and let you cancel.</p><p>AI reranking runs only when you add a session key and confirm the request review. No provider request has been made without your confirmation.</p><button className="button primary" onClick={onClose}>Done</button></div></div>;
 }
