@@ -28,11 +28,18 @@ web/lib/profile.ts               deterministic profile extraction
 web/data/mitacs-projects.public.json  bundled public project index
 scripts/generate_public_index.py reproducible public-index generator
 matcher-data/                    normalized public source corpus
+api/                             legacy FastAPI prototype, not deployed
 ```
 
 The application is deployed from `web/` to Vercel. It uses the bundled public
 index and same-origin route handlers; candidate documents are never accepted
 by a route handler.
+
+`api/` holds an earlier FastAPI prototype of the same matching logic. It is kept
+for reference and is still covered by `tests/test_local_first.py`, but it is not
+deployed and is outside the Vercel root directory. Nothing in the running
+application depends on it. The local-first constraint on the deployed app is
+enforced separately by `web/app/api/local-first.test.ts`.
 
 ## Local development
 
@@ -65,6 +72,18 @@ Clearing browser storage removes them from this device. Provider keys, when
 entered, remain in `sessionStorage` for the current browser session only.
 Optional AI review supports OpenRouter, Gemini, and Hugging Face through explicit browser consent. Evidence sources are reviewed before sending, protected documents are excluded unless selected, and deterministic full-corpus results remain available as the fallback. The local semantic baseline uses fixed hashed-token vectors; no vector database is currently required.
 Profile enrichment and project-specific CV alignment are review-first drafts: every accepted statement retains source provenance, and original profile content is not silently overwritten.
+
+These are enforced guarantees, not conventions. `web/app/api/local-first.test.ts`
+fails the build if a route handler is added that makes a network call, reads a
+provider credential from the environment, writes to the filesystem, logs a
+request body, or targets a host outside the four known provider origins. The
+route inventory itself is asserted, so adding any new endpoint requires
+deliberately updating the test.
+
+Concurrency: the app holds no shared mutable server-side state. The BM25 index is
+built once at import from a committed JSON file and is read-only thereafter, and
+provider key pools live in each browser's own `sessionStorage`. Concurrent users
+cannot observe or affect one another.
 
 ## Verification
 
